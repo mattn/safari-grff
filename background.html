@@ -48,7 +48,7 @@ safari.application.addEventListener('message', function(evt) {
     break;
   case "siteinfo":
     getSiteInfo(data, function(result){
-      evt.target.page.dispatchMessage('Response', result);
+      evt.target.page.dispatchMessage('siteinfo', result);
     });
     break;
   case "expand":
@@ -62,20 +62,20 @@ safari.application.addEventListener('message', function(evt) {
         if(req.status != 200){ return req.onerror(req.statusText) }
         data.result = true;
         data.content = req.responseText;
-        evt.target.page.dispatchMessage('Response', data);
+        evt.target.page.dispatchMessage('fullfeed', data);
       };
       
       req.onerror = function(e){
         data.result = false;
         data.reason = e;
-        evt.target.page.dispatchMessage('Response', data);
+        evt.target.page.dispatchMessage('fullfeed', data);
       };
       
       req.send(null);
     } catch(e) {
       data.result = false;
       data.reason = e;
-      evt.target.page.dispatchMessage('Response', data);
+      evt.target.page.dispatchMessage('fullfeed', data);
     }
     
     break;
@@ -85,7 +85,7 @@ safari.application.addEventListener('message', function(evt) {
 safari.application.addEventListener("command", function(evt){
   if (evt.command === 'update-siteinfo') {
     localStorage.clear();
-	safari.application.activeBrowserWindow.activeTab.page.dispatchMessage('Response', {task: 'update-siteinfo'});
+	safari.application.activeBrowserWindow.activeTab.page.dispatchMessage('update-siteinfo', {task: 'siteinfo'});
   }
 }, false);
 
